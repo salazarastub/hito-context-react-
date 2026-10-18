@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Header from './header';
 import CardPizza from './cardPizza';
-import { pizzas } from './pizzas';
+import { pizzas } from '../components/pizzas';
 
 const Home = () => {
   useEffect(() => {

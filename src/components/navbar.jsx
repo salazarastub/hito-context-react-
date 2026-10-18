@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const total = 25000;
@@ -7,24 +8,26 @@ const Navbar = () => {
 
   return (
     <nav className="d-flex align-items-center p-3 border-bottom">
-      <div className="d-flex gap-2">
-        <button className="btn btn-primary">🍕 Home</button>
+      <div className="d-flex gap-2 flex-wrap">
+        <Link to="/" className="btn btn-primary">🍕 Home</Link>
 
         {token ? (
           <>
-            <button className="btn btn-secondary">🔓 Profile</button>
+            <Link to="/profile" className="btn btn-secondary">🔓 Profile</Link>
             <button className="btn btn-danger">🔒 Logout</button>
           </>
         ) : (
           <>
-            <button className="btn btn-success">🔐 Login</button>
-            <button className="btn btn-warning">🔐 Register</button>
+            <Link to="/login" className="btn btn-success">🔐 Login</Link>
+            <Link to="/register" className="btn btn-warning">🔐 Register</Link>
           </>
         )}
       </div>
 
       <div className="ms-auto">
-        <button className="btn btn-outline-dark">🛒 Total: ${formattedTotal}</button>
+        <Link to="/cart" className="btn btn-outline-dark">
+          🛒 Total: ${formattedTotal}
+        </Link>
       </div>
     </nav>
   );
