@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Profile = () => {
   const user = {
     name: 'Usuario Mamma Mia',

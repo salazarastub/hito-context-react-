@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Header from './header';
 import CardPizza from './cardPizza';
 import { pizzas } from '../components/pizzas';
@@ -18,12 +18,7 @@ const Home = () => {
       <div className="row g-4 mt-3">
         {pizzas.map((pizza) => (
           <div key={pizza.id} className="col-md-4">
-            <CardPizza
-              name={pizza.name}
-              price={pizza.price}
-              ingredients={pizza.ingredients}
-              img={pizza.img}
-            />
+            <CardPizza pizzaData={pizza} />
           </div>
         ))}
       </div>

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Header = ({ title = 'Pizzería Mamma Mia', description = 'Las mejores pizzas artesanales' }) => {
   const style = {
     backgroundImage: "url('/fondo.jpg')",

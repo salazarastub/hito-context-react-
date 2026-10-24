@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useCart } from '../context/CartContext';
 
 const defaultPizza = {
   name: 'Cargando...',
@@ -8,11 +9,17 @@ const defaultPizza = {
   description: 'Cargando información de la pizza...',
 };
 
-const CardPizza = ({ pizzaId = 'p001' }) => {
-  const [pizza, setPizza] = useState(defaultPizza);
-  const [loading, setLoading] = useState(true);
+const CardPizza = ({ pizzaId = 'p001', pizzaData = null }) => {
+  const [pizza, setPizza] = useState(() => pizzaData || defaultPizza);
+  const { addToCart } = useCart();
+  const currentPizza = pizzaData || pizza;
+  const loading = !pizzaData && pizza.name === defaultPizza.name && pizza.price === defaultPizza.price;
 
   useEffect(() => {
+    if (pizzaData) {
+      return;
+    }
+
     const fetchPizza = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/pizzas/${pizzaId}`);
@@ -26,28 +33,35 @@ const CardPizza = ({ pizzaId = 'p001' }) => {
       } catch (error) {
         console.error('Error al obtener la pizza:', error);
         setPizza(defaultPizza);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchPizza();
-  }, [pizzaId]);
+  }, [pizzaData, pizzaId]);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: currentPizza.id || pizzaData?.id || pizzaId,
+      name: currentPizza.name,
+      price: Number(currentPizza.price || 0),
+      img: currentPizza.img,
+    });
+  };
 
   return (
     <div className="card h-100 shadow-sm">
-      <img src={pizza.img} className="card-img-top" alt={pizza.name} style={{ height: '260px', objectFit: 'cover' }} />
+      <img src={currentPizza.img} className="card-img-top" alt={currentPizza.name} style={{ height: '260px', objectFit: 'cover' }} />
 
       <div className="card-body d-flex flex-column">
-        <h5 className="card-title text-capitalize fw-bold">{pizza.name}</h5>
+        <h5 className="card-title text-capitalize fw-bold">{currentPizza.name}</h5>
 
-        <p className="card-text fw-bold mb-2">Precio: ${Number(pizza.price || 0).toLocaleString()}</p>
+        <p className="card-text fw-bold mb-2">Precio: ${Number(currentPizza.price || 0).toLocaleString()}</p>
 
-        <p className="card-text mb-3">{pizza.description}</p>
+        <p className="card-text mb-3">{currentPizza.description}</p>
 
         <p className="card-text fw-bold mb-2">Ingredientes:</p>
         <ul className="list-unstyled mb-3">
-          {pizza.ingredients.map((ingredient, index) => (
+          {currentPizza.ingredients.map((ingredient, index) => (
             <li key={index}>- {ingredient}</li>
           ))}
         </ul>
@@ -58,7 +72,7 @@ const CardPizza = ({ pizzaId = 'p001' }) => {
           <button type="button" className="btn btn-outline-primary me-2">
             Ver más
           </button>
-          <button type="button" className="btn btn-primary">
+          <button type="button" className="btn btn-primary" onClick={handleAddToCart}>
             Añadir
           </button>
         </div>

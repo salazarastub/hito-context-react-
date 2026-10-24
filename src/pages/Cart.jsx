@@ -1,24 +1,18 @@
-import React, { useState } from 'react';
-import { pizzaCart } from '../components/pizzas';
+import { useCart } from '../context/CartContext';
 
 const Cart = () => {
-  const [cart, setCart] = useState(pizzaCart);
-
-  const actualizarCantidad = (id, cambio) => {
-    setCart((prevCart) =>
-      prevCart
-        .map((item) =>
-          item.id === id ? { ...item, count: item.count + cambio } : item
-        )
-        .filter((item) => item.count > 0)
-    );
-  };
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.count, 0);
+  const { cart, total, updateQuantity, clearCart } = useCart();
 
   return (
     <div className="container py-4">
-      <h2 className="mb-4">Carrito de compras</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">Carrito de compras</h2>
+        {cart.length > 0 && (
+          <button className="btn btn-outline-danger btn-sm" onClick={clearCart}>
+            Vaciar carrito
+          </button>
+        )}
+      </div>
 
       {cart.length === 0 ? (
         <p>No hay pizzas en el carrito.</p>
@@ -37,8 +31,8 @@ const Cart = () => {
                 />
 
                 <div>
-                  <h5 className="mb-1">{pizza.name}</h5>
-                  <p className="mb-1">Precio: ${pizza.price.toLocaleString()}</p>
+                  <h5 className="mb-1 text-capitalize">{pizza.name}</h5>
+                  <p className="mb-1">Precio: ${Number(pizza.price || 0).toLocaleString()}</p>
                   <p className="mb-0">Cantidad: {pizza.count}</p>
                 </div>
               </div>
@@ -46,7 +40,7 @@ const Cart = () => {
               <div className="d-flex align-items-center gap-2">
                 <button
                   className="btn btn-outline-secondary btn-sm"
-                  onClick={() => actualizarCantidad(pizza.id, -1)}
+                  onClick={() => updateQuantity(pizza.id, -1)}
                 >
                   -
                 </button>
@@ -55,7 +49,7 @@ const Cart = () => {
 
                 <button
                   className="btn btn-outline-secondary btn-sm"
-                  onClick={() => actualizarCantidad(pizza.id, 1)}
+                  onClick={() => updateQuantity(pizza.id, 1)}
                 >
                   +
                 </button>
@@ -64,7 +58,7 @@ const Cart = () => {
           ))}
 
           <div className="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
-            <h4>Total: ${total.toLocaleString()}</h4>
+            <h4 className="mb-0">Total: ${total.toLocaleString()}</h4>
             <button className="btn btn-primary">Pagar</button>
           </div>
         </>
