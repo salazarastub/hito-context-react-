@@ -1,7 +1,9 @@
 import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 
 const Cart = () => {
   const { cart, total, updateQuantity, clearCart } = useCart();
+  const { token } = useUser();
 
   return (
     <div className="container py-4">
@@ -59,7 +61,9 @@ const Cart = () => {
 
           <div className="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
             <h4 className="mb-0">Total: ${total.toLocaleString()}</h4>
-            <button className="btn btn-primary">Pagar</button>
+            <button className="btn btn-primary" disabled={!token}>
+              {token ? 'Pagar' : 'Inicia sesión para pagar'}
+            </button>
           </div>
         </>
       )}
